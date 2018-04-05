@@ -37,6 +37,39 @@ int bolzano(te_expr *f, double a, double b){
     return calcF1(f,a)*calcF1(f,b)<0 ? 1 : 0;
 }
 
+double maxErr(double a){
+    return (fabs(a)>=1) ? a : 1;
+}
+
+double realdf1(double e, int iMax, te_expr *f, double x){
+    int flag = 0;
+    int k = 0;
+    double fx, fant;
+    double err, errant;
+    double h = 2;
+    printf("---//---//---");
+    while(!flag && k <= iMax){
+        k++;
+        h = h/2;
+        printf("\n[Interacao K = %d / h = %.5f",k,h);
+        fx = (calcF1(f,x+h)-calcF1(f,x-h))/(2*h);
+        printf("\n[dF(x)/x = \t%.8f]",fx);
+        if(k>1){
+            err = fabs(fx - fant)/maxErr(fx);
+            printf("\n[Erro = \t%.8f]",err);
+            if(err < e) flag = 1;
+        }
+        if(k > 2){
+            if(err > errant) flag = 1;
+        }
+        errant = err;
+        fant = fx;
+        printf("\n\n");
+    }
+    return fx;
+        
+}
+
 
 int bissecao(double e, int iMax, te_expr *f, double a, double b, int *k, double *r){
     double x;
@@ -49,7 +82,7 @@ int bissecao(double e, int iMax, te_expr *f, double a, double b, int *k, double 
     printf("---//---//---");
     while(!flag && *k <= iMax){
         *k += 1;
-        printf("\n[Interação K = %d]",*k);
+        printf("\n[Interacao K = %d]",*k);
         printf("\n[Intervalo = [%.8f %.8f] ]",a,b);
         x = (a+b)/2;
         printf("\n[x = \t%.8f]",x);
@@ -89,5 +122,10 @@ void pre_bissecao(){
 }
 
 int main(){
-    
+    char ex[50];
+    te_expr *f = verifica_gera_expr(ex);
+    double r;
+    r = realdf1(0.01,10,f,4);
+    printf("\n\nResult = %.8f",r);
+    getch();
 }
