@@ -76,7 +76,7 @@ int bissecao(double e, int iMax, te_expr *f, double a, double b, int *k, double 
     
 }
 
-int main(){
+void pre_bissecao(){
     char ex[50];
     te_expr *f = verifica_gera_expr(ex);
     double r;
@@ -86,4 +86,8 @@ int main(){
     printf("\n\n%s\n",ex);
     printf("\n%.8f",r);
     getch();
+}
+
+int main(){
+    
 }
