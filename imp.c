@@ -171,7 +171,7 @@ void pre_bissecao(){
     getch();
 }
 
-int main(){
+void pre_newton(){
     char ex[50];
     te_expr *f = verifica_gera_expr(ex);
     double r;
@@ -179,4 +179,8 @@ int main(){
     newton(0.001,10,f,7,&k,&r);
     printf("\n\nResult = %.8f",r);
     getch();
+}
+
+int main(){
+    
 }
