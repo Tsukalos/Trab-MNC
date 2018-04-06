@@ -96,7 +96,7 @@ int newton(double e, int iMax, te_expr *f, double x, int *k, double *r){
     int flag = 0;
     double fx, dfx;
     double err;
-    double xi;
+    double xi, xant;
     *k = -1;
     xi = x;
     fx = calcF1(f,xi);
@@ -105,14 +105,16 @@ int newton(double e, int iMax, te_expr *f, double x, int *k, double *r){
         *k+=1;
         printf("\n[Interacao K = %d]",*k);
         dfx = realdf1(e,iMax,f,xi);
+        xant = xi;
         xi = xi - (fx/dfx);
         printf("\n[x = \t%.8f]",xi);
         fx = calcF1(f,xi);
+        if(fabs(fx)<e) flag = 1;
         printf("\n[|f(%.8f)| = \t|%.8f|]",xi,fx);
-        err = fabs(calcF1(f,xi));
+        err = fabs(xi - xant)/maxErr(xi);
         printf("\n[Erro = \t|%.8f|]",err);
         if(err < e) flag = 1;
-        if(fabs(fx)<e) flag = 1;
+        
         printf("\n");
     }
     *r = xi;
@@ -174,7 +176,7 @@ int main(){
     te_expr *f = verifica_gera_expr(ex);
     double r;
     int k;
-    newton(0.01,10,f,1.5,&k,&r);
+    newton(0.001,10,f,7,&k,&r);
     printf("\n\nResult = %.8f",r);
     getch();
 }
