@@ -2,6 +2,7 @@
 #include <conio.h>
 #include <math.h>
 #include "tinyexpr.h"
+#include "tinyexpr.c"
 /*
 *   Vários tipos de função podem ser escritos usando tinyexpr
 *   Para a implementação do método, podem ser escritas funções usando variáveis x,y,z,w
@@ -28,7 +29,7 @@ te_expr * verifica_gera_expr(){
 double calcF1(te_expr *f, double x){
     pX = x;
     double r = te_eval(f);
-    printf("\t%.6f\n",r);
+    //printf("\t%.6f\n",r);
     return r;
 }
 
@@ -72,7 +73,8 @@ int bissecao(double e, int iMax, te_expr *f, double a, double b, int *k, double 
 
 
 int posicaofalsa(double e, int iMax, te_expr *f, double a, double b, int *k, double *r){ // errp, maxinteraçoes, func, [a b],k->interacao, raiz
-    double x;
+    printf("\nPosicao falsa");
+	double x;
     double fx;
     int flag = 0;
     if(!bolzano(f,a,b)){
@@ -81,17 +83,22 @@ int posicaofalsa(double e, int iMax, te_expr *f, double a, double b, int *k, dou
     }
     while(!flag && *k <= iMax){
         *k += 1;
+        printf("\nInteracao %d",*k);
+        printf("\nk = %d",*k);
         x = (a*calcF1(f,b) - b*calcF1(f,a))/(calcF1(f,b) - calcF1(f,a)); //criando novo x;
-        fx = calcF1(f,x);
+        printf("\nx = %f",x);
+        fx = calcF1(f,x);        
+        printf("\n |f(x)| = |%f| ",fx);
         if(fabs(fx) < e) flag = 1; //fabs = modulo checar f(x)
+	
         if(bolzano(f,a,x)){
             b = x; // se fa*fx < 0
         }else{
             a = x; // se fa*fx > 0
         }
-        if(fabs(b - a) < e) flag = 1; //|b-a| checar intervalo
-    }
-
+        printf(" |b-a| = |%f|",fabs(b-a));
+        if(fabs(b - a) < e) flag = 1; //|b-a| checar intervalo   
+	}
     *r = x;
 
     if(*k > iMax){
@@ -113,7 +120,7 @@ int main(){
     printf("%.5f",r);*/
     k=0;    
     te_expr *f = verifica_gera_expr();
-    posicaofalsa(0.0001,10,f,-0.3,0.25,&k,&r);
-    printf("%.5f",r);
+    posicaofalsa(0.0001,10,f,-0.3,0.25,&k,&r); // testei com x^5 - 10/9*x^3 + 5/21*x // deu certo
+    printf("\nResultado = %.6f",r);
     getch();
 }
