@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include "tinyexpr.h"
+#include "tinyexpr.c"
 /*
 *   Vários tipos de função podem ser escritos usando tinyexpr
 *   Para a implementação do método, podem ser escritas funções usando variáveis x,y,z,w
@@ -38,7 +39,7 @@ int bolzano(te_expr *f, double a, double b){
 }
 
 double maxErr(double a){
-    return (fabs(a)>=1) ? a : 1;
+    return (fabs(a)>=1) ? fabs(a) : 1;
 }
 
 double realdf1(double e, int iMax, te_expr *f, double x){
@@ -53,6 +54,36 @@ double realdf1(double e, int iMax, te_expr *f, double x){
         h = h/2;
         printf("\n[Interacao K = %d / h = %.5f",k,h);
         fx = (calcF1(f,x+h)-calcF1(f,x-h))/(2*h);
+        printf("\n[dF(x)/x = \t%.8f]",fx);
+        if(k>1){
+            err = fabs(fx - fant)/maxErr(fx);
+            printf("\n[Erro = \t%.8f]",err);
+            if(err < e) flag = 1;
+        }
+        if(k > 2){
+            if(err > errant) flag = 1;
+        }
+        errant = err;
+        fant = fx;
+        printf("\n\n");
+    }
+    return fx;
+        
+}
+
+double realdf2(double e, int iMax, te_expr *f, double x){
+    int flag = 0;
+    int k = 0;
+    double fx, fant;
+    double err, errant;
+    double h = 2;
+    double minus2fx = -2*calcF1(f,x);
+    printf("---//---//---");
+    while(!flag && k <= iMax){
+        k++;
+        h = h/2;
+        printf("\n[Interacao K = %d / h = %.5f",k,h);
+        fx = (calcF1(f,x+(2*h))+minus2fx+calcF1(f,x-(2*h)))/(4*h*h);
         printf("\n[dF(x)/x = \t%.8f]",fx);
         if(k>1){
             err = fabs(fx - fant)/maxErr(fx);
@@ -125,7 +156,7 @@ int main(){
     char ex[50];
     te_expr *f = verifica_gera_expr(ex);
     double r;
-    r = realdf1(0.01,10,f,4);
+    r = realdf2(0.01,10,f,-2);
     printf("\n\nResult = %.8f",r);
     getch();
 }
