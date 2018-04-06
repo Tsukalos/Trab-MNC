@@ -48,16 +48,12 @@ double realdf1(double e, int iMax, te_expr *f, double x){
     double fx, fant;
     double err, errant;
     double h = 2;
-    printf("---//---//---");
     while(!flag && k <= iMax){
         k++;
         h = h/2;
-        printf("\n[Interacao K = %d / h = %.5f",k,h);
         fx = (calcF1(f,x+h)-calcF1(f,x-h))/(2*h);
-        printf("\n[dF(x)/x = \t%.8f]",fx);
         if(k>1){
             err = fabs(fx - fant)/maxErr(fx);
-            printf("\n[Erro = \t%.8f]",err);
             if(err < e) flag = 1;
         }
         if(k > 2){
@@ -65,7 +61,6 @@ double realdf1(double e, int iMax, te_expr *f, double x){
         }
         errant = err;
         fant = fx;
-        printf("\n\n");
     }
     return fx;
         
@@ -78,16 +73,13 @@ double realdf2(double e, int iMax, te_expr *f, double x){
     double err, errant;
     double h = 2;
     double minus2fx = -2*calcF1(f,x);
-    printf("---//---//---");
     while(!flag && k <= iMax){
         k++;
         h = h/2;
-        printf("\n[Interacao K = %d / h = %.5f",k,h);
         fx = (calcF1(f,x+(2*h))+minus2fx+calcF1(f,x-(2*h)))/(4*h*h);
-        printf("\n[dF(x)/x = \t%.8f]",fx);
         if(k>1){
             err = fabs(fx - fant)/maxErr(fx);
-            printf("\n[Erro = \t%.8f]",err);
+
             if(err < e) flag = 1;
         }
         if(k > 2){
@@ -95,12 +87,37 @@ double realdf2(double e, int iMax, te_expr *f, double x){
         }
         errant = err;
         fant = fx;
-        printf("\n\n");
     }
     return fx;
         
 }
 
+int newton(double e, int iMax, te_expr *f, double x, int *k, double *r){
+    int flag = 0;
+    double fx, dfx;
+    double err;
+    double xi;
+    *k = -1;
+    xi = x;
+    fx = calcF1(f,xi);
+    printf("---//---//---");
+    while(!flag && *k <= iMax){
+        *k+=1;
+        printf("\n[Interacao K = %d]",*k);
+        dfx = realdf1(e,iMax,f,xi);
+        xi = xi - (fx/dfx);
+        printf("\n[x = \t%.8f]",xi);
+        fx = calcF1(f,xi);
+        printf("\n[|f(%.8f)| = \t|%.8f|]",xi,fx);
+        err = fabs(calcF1(f,xi));
+        printf("\n[Erro = \t|%.8f|]",err);
+        if(err < e) flag = 1;
+        if(fabs(fx)<e) flag = 1;
+        printf("\n");
+    }
+    *r = xi;
+    return 0;
+}
 
 int bissecao(double e, int iMax, te_expr *f, double a, double b, int *k, double *r){
     double x;
@@ -118,7 +135,7 @@ int bissecao(double e, int iMax, te_expr *f, double a, double b, int *k, double 
         x = (a+b)/2;
         printf("\n[x = \t%.8f]",x);
         fx = calcF1(f,x);
-        printf("\n[f(x) = \t%.8f]",fx);
+        printf("\n[|f(x)| = \t|%.8f|]",fx);
         if(fabs(fx) < e) flag = 1;
         if(bolzano(f,a,x)){
             b = x; // se fa*fx < 0
@@ -156,7 +173,8 @@ int main(){
     char ex[50];
     te_expr *f = verifica_gera_expr(ex);
     double r;
-    r = realdf2(0.01,10,f,-2);
+    int k;
+    newton(0.01,10,f,1.5,&k,&r);
     printf("\n\nResult = %.8f",r);
     getch();
 }
