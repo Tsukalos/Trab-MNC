@@ -176,7 +176,6 @@ double realNdf2_1(double e, int iMax, te_expr *f, double x[], int i, int N){
         errant = err;
         fant = fx;
     }
-    printf("\t%.8f\n",fx);
     if(flag == 2)
         return fant;
     return fx;
@@ -237,6 +236,20 @@ int jacobiano(double N, int eqN, te_expr *fv[], double x[], double m[][varsN]){
         te_expr *f = fv[i];
         for(j = 0; j < N; j++){
             m[i][j] = realNdf1(0.01,10,f,x,j,N);
+        }
+    }
+}
+
+int hessiana(double N, te_expr *f, double x[], double m[][varsN]){
+    double r;
+    int i, j;
+    for(i = 0; i < N; i++){
+        for(j = 0; j < N; j++){
+            if(i == j){
+                m[i][j] = realNdf2_1(0.01,10,f,x,i,N);
+            }else{
+                m[i][j] = realNdf2_2(0.01,10,f,x,N);
+            }
         }
     }
 }
@@ -356,14 +369,28 @@ void functionArrayGen(te_expr *f[], int N){
     }
 }
 
-
-int main(){
+void pre_jacob(){
     char ex[50];
     te_expr *f[MAX];
-    functionArrayGen(f,3);
+    functionArrayGen(f,3); // 3 é o número de eqs
     double x[varsN] = {1,5};
     double m[MAX][varsN];
-    jacobiano(2,3,f,x,m);
+    jacobiano(2,3,f,x,m); // 2 é o tamanho do vetor x
     printM(m,2,3);
     getch();
+}
+
+void pre_hessiana(){
+    char ex[50];
+    te_expr *f = verifica_gera_expr(ex);
+    double x[varsN] = {-1,1};
+    double m[MAX][varsN];
+    hessiana(2,f,x,m); // 2 aqui é tamanho do vetor x
+    printM(m,2,2);
+    getch();
+}
+
+
+int main(){
+
 }
