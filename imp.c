@@ -293,6 +293,39 @@ int newton(double e, int iMax, te_expr *f, double x, int *k, double *r){
     return 0;
 }
 
+
+
+int newtonModificado(double e, int iMax, te_expr *f, double x, int *k, double *r){
+    int flag = 0;
+    double fx, dfx;
+    double err;
+    double xi, xant;
+    *k = -1;
+    xi = x;
+    fx = calcF1(f,xi);
+    dfx = realdf1(e,iMax,f,xi); //dfx fixo
+    printf("---//---//---");
+    while(!flag && *k <= iMax){
+        *k+=1;
+        printf("\n[Interacao K = %d]",*k);
+       // dfx = realdf1(e,iMax,f,xi); // n precisa disso pq será sempre a msm dfx
+        xant = xi;
+        xi = xi - (fx/dfx);
+        printf("\n[x = \t%.8f]",xi);
+        fx = calcF1(f,xi);
+        if(fabs(fx)<e) flag = 1;
+        printf("\n[|f(%.8f)| = \t|%.8f|]",xi,fx);
+        err = fabs(xi - xant)/maxErr(xi);
+        printf("\n[Erro = \t|%.8f|]",err);
+        if(err < e) flag = 1;
+        
+        printf("\n");
+    }
+    *r = xi;
+    return 0;
+}
+
+
 int bissecao(double e, int iMax, te_expr *f, double a, double b, int *k, double *r){
     double x;
     double fx;
@@ -353,6 +386,17 @@ void pre_newton(){
     getch();
 }
 
+
+void pre_newtonModificado(){
+    char ex[50];
+    te_expr *f = verifica_gera_expr(ex);
+    double r;
+    int k;
+    newtonModificado(0.01,10,f,1.5,&k,&r);
+    printf("\n\nResult = %.8f",r);
+    getch();
+}
+
 void teste_Ndf1(){
     char ex[50];
     te_expr *f = verifica_gera_expr(ex);
@@ -392,5 +436,6 @@ void pre_hessiana(){
 
 
 int main(){
+	pre_newtonModificado();
 
 }
