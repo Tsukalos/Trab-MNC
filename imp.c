@@ -57,11 +57,14 @@ double realdf1(double e, int iMax, te_expr *f, double x){
             if(err < e) flag = 1;
         }
         if(k > 2){
-            if(err > errant) flag = 1;
+            if(err > errant) flag = 2;
+            break;
         }
         errant = err;
         fant = fx;
     }
+    if(flag == 2)
+        return fant;
     return fx;
         
 }
@@ -83,11 +86,14 @@ double realdf2(double e, int iMax, te_expr *f, double x){
             if(err < e) flag = 1;
         }
         if(k > 2){
-            if(err > errant) flag = 1;
+            if(err > errant) flag = 2;
+            break;
         }
         errant = err;
         fant = fx;
     }
+    if(flag == 2)
+        return fant;
     return fx;
         
 }
