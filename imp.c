@@ -2,8 +2,9 @@
 #include <conio.h>
 #include <string.h>
 #include <math.h>
-#include<stdlib.h>
-#include<windows.h>
+#include <stdlib.h>
+#include <windows.h>
+#include <ctype.h>
 #include "tinyexpr.h"
 #include "tinyexpr.c"
 
@@ -46,7 +47,7 @@ void quadro()
 	gotoxy(69,18);printf("%c", 188);
 	//eixo x
 	for(i=3; i<=68;i++)
-	{ //posição do titulo
+	{ //posiï¿½ï¿½o do titulo
 		if(!(i>25&&i<48))
 		{
 		gotoxy(i,2);
@@ -111,11 +112,17 @@ void sobre()
     	system("cls");
 	}
 }
-//---------------------Funções---------------------------------------------------------------------------------------------
+//---------------------Funï¿½ï¿½es---------------------------------------------------------------------------------------------
 
 double pX,pY,pZ,pW;
 
 te_variable vars[] = {{"x",&pX},{"y",&pY},{"z",&pZ},{"w",&pW}};
+
+void limpa(){
+	system("cls");
+	system("color 8E");
+	quadro();
+}
 
 te_expr * verifica_gera_expr(char ex[]){
     int err = 1;
@@ -129,12 +136,6 @@ te_expr * verifica_gera_expr(char ex[]){
     }
     strcpy(ex,expr);
     return f; 
-}
-
-void limpa(){
-	system("cls");
-	system("color 8E");
-	quadro();
 }
 
 double pegaE(){
@@ -682,7 +683,7 @@ void pre_bissecao(){
     if(!aux){
 	    //gotoxy(6,4);printf("%s",ex);
 	    gotoxy(6,11);printf("M%ctodo Bissec%c%co",130,135,198);
-		gotoxy(6,12);printf("Itera%c%ces: %d",135,148,r);
+		gotoxy(6,12);printf("Itera%c%ces: %d",135,148,k);
 	    gotoxy(6,13);printf("Raiz aproximada: %.8f",r);
 	}
     getch();
@@ -704,7 +705,7 @@ void pre_posicaofalsa(){
     if(!aux){
 	    //gotoxy(6,4);printf("%s",ex);
 	    gotoxy(6,12);printf("M%ctodo Posi%c%co Falsa",130,135,198);
-		gotoxy(6,13);printf("Itera%c%ces: %d",135,148,r);
+		gotoxy(6,13);printf("Itera%c%ces: %d",135,148,k);
 	    gotoxy(6,14);printf("Raiz aproximada: %.8f",r);
 	}
     getch();
@@ -726,7 +727,7 @@ void pre_posicaofalsamodificada(){
     if(!aux){
 	    //gotoxy(6,4);printf("%s",ex);
 	    gotoxy(6,15);printf("M%ctodo Posi%c%co Falsa Modificada",130,135,198);
-		gotoxy(6,16);printf("Itera%c%ces: %d",135,148,r);
+		gotoxy(6,16);printf("Itera%c%ces: %d",135,148,k);
 	    gotoxy(6,17);printf("Raiz aproximada: %.8f",r);
 	}
     getch();
@@ -744,7 +745,7 @@ void pre_newton(){
     aux=newton(e,iMax,f,x,&k,&r);
 	if(!aux){
 	    gotoxy(6,11);printf("M%ctodo Newton",130);
-		gotoxy(6,12);printf("Itera%c%ces: %d",135,148,r);
+		gotoxy(6,12);printf("Itera%c%ces: %d",135,148,k);
 	    gotoxy(6,13);printf("Raiz aproximada: %.8f",r);
 	}
     getch();
@@ -762,7 +763,7 @@ void pre_newtonModificado(){
     aux=newtonModificado(e,iMax,f,x,&k,&r);
     if(!aux){
 	    gotoxy(6,11);printf("M%ctodo Newton Modificado",130);
-		gotoxy(6,12);printf("Itera%c%ces: %d",135,148,r);
+		gotoxy(6,12);printf("Itera%c%ces: %d",135,148,k);
 	    gotoxy(6,13);printf("Raiz aproximada: %.8f",r);
 	}
     getch();
