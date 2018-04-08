@@ -202,7 +202,7 @@ void leVar(double *x, int nvar){
 	int i,j=4;
 	limpa();
 	for(i=0;i<nvar;i++){
-		gotoxy(6,j);printf("Valor da vari%cvel %d: ", 160, i);
+		gotoxy(6,j);printf("Valor da vari%cvel %d: ", 160, i+1);
 		gotoxy(6,j+1);scanf("%lf", &x[i]);
 		j+=2;
 	}
