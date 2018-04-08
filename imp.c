@@ -82,7 +82,7 @@ int escolher(){
 		gotoxy(6,14);printf("9 - Sobre");
 		gotoxy(6,15);printf("10 - Sair");
 		gotoxy(6,16);scanf("%d", &opc);
-	}while(opc>11 || opc<1);
+	}while(opc>10 || opc<1);
 	return opc;
 }
 //-----------------------------------------------------------------------------------------------------------------------
@@ -621,12 +621,12 @@ int posicaofalsamodificada(double e, int iMax, te_expr *f, double a, double b, i
         {
         	if(!fixo)//fixo = a
         	{
-        		gotoxy(6,6);printf("\tf(a) = f(a)/2");
+        		gotoxy(6,6);printf("f(a) = f(a)/2");
         		x = (a*calcF1(f,b) - b*calcF1(f,a)/2)/(calcF1(f,b) - calcF1(f,a)/2); 
 
 			}
         	else{
-        		gotoxy(6,6);printf("\tf(b) = f(b)/2");
+        		gotoxy(6,6);printf("f(b) = f(b)/2");
         		x = (a*calcF1(f,b)/2 - b*calcF1(f,a))/(calcF1(f,b)/2 - calcF1(f,a)); 
 			}
 		}
@@ -647,12 +647,12 @@ int posicaofalsamodificada(double e, int iMax, te_expr *f, double a, double b, i
         }
         gotoxy(6,9);printf("|b-a| = |%f|",fabs(b-a));
         if(fabs(b - a) < e) flag = 1; //|b-a| checar intervalo
-		gotoxy(6,10);printf("\tXp = %f",xp);  
+		gotoxy(6,10);printf("Xp = %f",xp);  
         if(calcF1(f,xp) * calcF1(f,x) > 0 )
         {
         	flag2 = 1;
 		}
-		gotoxy(6,11);printf("\t[a b] = [%f   %f]",a,b);
+		gotoxy(6,11);printf("[a b] = [%f   %f]",a,b);
 		gotoxy(6,13);system("pause"); 
 	}
     *r = x;
