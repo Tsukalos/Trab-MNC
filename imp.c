@@ -208,7 +208,8 @@ void leVar(double *x, int nvar){
 	}
 }
 
-double leVar2(double *x){
+double leVar2(){
+    double x;
 	gotoxy(6,10);printf("Digite o valor de X: ");
 	gotoxy(6,11);scanf("%lf", &x);
 	return x;
@@ -780,11 +781,10 @@ void teste_Ndf1(){
     te_expr *f = verifica_gera_expr(ex);
     int nvar,iMax;
     double e;
-    limpa();
     e=pegaE();
     iMax=pegaiMax();
     double x;
-    leVar2(&x);
+    x = leVar2(x);
     limpa();
     gotoxy(6,4);printf("Derivada Primeira");
     gotoxy(6,5);printf("f1 = %.8f",realdf1(e,iMax,f,x));
