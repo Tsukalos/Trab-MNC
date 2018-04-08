@@ -138,6 +138,20 @@ te_expr * verifica_gera_expr(char ex[]){
     return f; 
 }
 
+te_expr * verifica_gera_expr2(char ex[], int a){
+    int err = 1;
+    char expr[50];
+    te_expr * f;
+    while(err){
+    	limpa();
+        gotoxy(6,4);printf("Fun%c%co %d: Digite uma fun%c%co matem%ctica v%clida:",135,198,a,135,198,160,160);
+        gotoxy(6,5);gets(expr);
+        f = te_compile(expr,vars,4,&err);
+    }
+    strcpy(ex,expr);
+    return f; 
+}
+
 double pegaE(){
 	double e;
 	gotoxy(6,6);printf("Digite a precis%co (E): ", 198);
@@ -795,7 +809,7 @@ void functionArrayGen(te_expr *f[], int N){
     int i;
     char s[50];
     for(i = 0; i < N; i++){
-        f[i] = verifica_gera_expr(s);
+        f[i] = verifica_gera_expr2(s,i+1);
     }
 }
 
