@@ -2,6 +2,9 @@
 #include <conio.h>
 #include <string.h>
 #include <math.h>
+#include <stdlib.h>
+#include <windows.h>
+#include <ctype.h>
 #include "tinyexpr.h"
 #include "tinyexpr.c"
 
@@ -14,21 +17,216 @@
 *       x^2 - x^3 + 30
 *       sin(x+y)
 */
+
+void gotoxy(int x, int y)
+{
+  COORD c;
+  c.X = x - 1;
+  c.Y = y - 1;
+  SetConsoleCursorPosition (GetStdHandle(STD_OUTPUT_HANDLE), c);
+}
+
+void quadro()
+{
+	int i;
+	gotoxy(27,2);printf("  Trabalho 1 - MNC  ");
+	gotoxy(2,2);printf("%c", 201);
+	for(i=3; i<=18;i++) //eixo y
+	{
+		gotoxy(2,i);
+		printf("%c", 186);
+	}
+	gotoxy(2,18);printf("%c", 200);
+	
+	gotoxy(69,2);printf("%c", 187);
+	for(i=3; i<=18;i++)
+	{
+		gotoxy(69,i);
+		printf("%c", 186);
+	}
+	gotoxy(69,18);printf("%c", 188);
+	//eixo x
+	for(i=3; i<=68;i++)
+	{ //posi��o do titulo
+		if(!(i>25&&i<48))
+		{
+		gotoxy(i,2);
+		printf("%c", 205);
+		}
+	}
+	
+	for(i=3; i<=68;i++)
+	{
+		gotoxy(i,18);
+		printf("%c", 205);
+	}
+}
+//-------------------------------------------------------------------------------------------------------------------------
+int escolher(){
+	int opc;
+	do{
+		system("cls");
+		system("COLOR B1");
+		quadro();
+		gotoxy(6,3);printf("Zero de Fun%c%ces e Diferencia%c%co",135,148,135,198);
+		gotoxy(6,5);printf("Digite a op%c%co desejada:", 135,198);
+		gotoxy(6,6);printf("1 - Bissec%c%co", 135,198);
+		gotoxy(6,7);printf("2 - Posi%c%co Falsa", 135,198);
+		gotoxy(6,8);printf("3 - Posi%c%co Falsa Modificada",135,198);
+		gotoxy(6,9);printf("4 - Newton");
+		gotoxy(6,10);printf("5 - Newton Modificado");
+		gotoxy(6,11);printf("6 - Primeira Derivada");
+		//gotoxy(6,12);printf("7 - Segunda Derivada");
+		gotoxy(6,12);printf("7 - Jacobiano");
+		gotoxy(6,13);printf("8 - Hessiana");
+		gotoxy(6,14);printf("9 - Sobre");
+		gotoxy(6,15);printf("10 - Sair");
+		gotoxy(6,16);scanf("%d", &opc);
+	}while(opc>10 || opc<1);
+	return opc;
+}
+//-----------------------------------------------------------------------------------------------------------------------
+void sobre()
+{
+	system("cls");
+	system("COLOR 8E");
+	fflush(stdin);
+	char menu;
+	quadro();
+	gotoxy(10,3);printf("Cr%cditos: ", 130);
+	gotoxy(10,5);printf("Trabalho de M%ctodos Num%cricos Computacionais", 130,130);
+	gotoxy(10,7);printf("Desenvolvido por: ");
+	gotoxy(10,8);printf("Pedro Henrique Nunes Barros     (171022548)");
+	gotoxy(10,9);printf("Pedro Lamkowski dos Santos      (171021266)");
+    gotoxy(10,10);printf("Tania Sanai Shimabukuro         (171025717)");
+    gotoxy(10,12);printf("Deseja voltar ao menu? (s ou n) ");scanf("%c", &menu);
+    if (menu == 'n' || menu =='N')
+    {
+    	system("cls");
+    	system("COLOR A0");
+    	quadro();
+		gotoxy(18,9);printf("Obrigado por utilizar nosso sistema!\n\n\n\n\n\n\n\n");
+		exit(3);
+    }
+    else{
+    	system("cls");
+	}
+}
+//---------------------Fun��es---------------------------------------------------------------------------------------------
+
 double pX,pY,pZ,pW;
 
 te_variable vars[] = {{"x",&pX},{"y",&pY},{"z",&pZ},{"w",&pW}};
+
+void limpa(){
+	system("cls");
+	system("color 8E");
+	quadro();
+}
 
 te_expr * verifica_gera_expr(char ex[]){
     int err = 1;
     char expr[50];
     te_expr * f;
     while(err){
-        printf("\nDigite uma funcao matemarica valida:\n");
-        gets(expr);
+    	limpa();
+        gotoxy(6,4);printf("Digite uma fun%c%co matem%ctica v%clida:",135,198,160,160);
+        gotoxy(6,5);gets(expr);
         f = te_compile(expr,vars,4,&err);
     }
     strcpy(ex,expr);
     return f; 
+}
+
+te_expr * verifica_gera_expr2(char ex[], int a){
+    int err = 1;
+    char expr[50];
+    te_expr * f;
+    while(err){
+    	limpa();
+        gotoxy(6,4);printf("Fun%c%co %d: Digite uma fun%c%co matem%ctica v%clida:",135,198,a,135,198,160,160);
+        gotoxy(6,5);gets(expr);
+        f = te_compile(expr,vars,4,&err);
+    }
+    strcpy(ex,expr);
+    return f; 
+}
+
+double pegaE(){
+	double e;
+	gotoxy(6,6);printf("Digite a precis%co (E): ", 198);
+	gotoxy(6,7);scanf("%lf", &e);
+	return e;
+}
+
+int pegaiMax(){
+	int i;
+	gotoxy(6,8);printf("Digite o m%cximo de itera%c%ces: ", 160,135,148);
+	gotoxy(6,9);scanf("%d", &i);
+	return i;
+}
+
+int numEq(){
+	int i;
+	gotoxy(6,4);printf("Digite o n%cmero de equa%c%ces: ", 130,135,148);
+	gotoxy(6,5);scanf("%d", &i);
+	return i;
+}
+
+int numVar(){
+	int i;
+	do{
+		gotoxy(6,6);printf("Digite o n%cmero de vari%cveis (de 1 a 4): ", 130,160);
+		gotoxy(6,7);scanf("%d", &i);
+	}while(i<1 || i>4);
+	return i;
+}
+
+int numVar2(){
+	int i;
+	do{
+		gotoxy(6,4);printf("Digite o n%cmero de vari%cveis (de 1 a 4): ", 130,160);
+		gotoxy(6,5);scanf("%d", &i);
+	}while(i<1 || i>4);
+	return i;
+}
+
+double pegaX(){
+	double x;
+	gotoxy(6,10);printf("Digite o valor inicial (X0): ");
+	gotoxy(6,11);scanf("%lf", &x);
+	return x;
+}
+
+double pegaA(){
+	double a;
+	gotoxy(6,4);printf("Digite o intervalo inicial: ");
+	gotoxy(6,5);scanf("%lf", &a);
+	return a;
+}
+
+double pegaB(){
+	double b;
+	gotoxy(6,6);printf("Digite o intervalo final: ");
+	gotoxy(6,7);scanf("%lf", &b);
+	return b;
+}
+
+void leVar(double *x, int nvar){
+	int i,j=4;
+	limpa();
+	for(i=0;i<nvar;i++){
+		gotoxy(6,j);printf("Valor da vari%cvel %d: ", 160, i+1);
+		gotoxy(6,j+1);scanf("%lf", &x[i]);
+		j+=2;
+	}
+}
+
+double leVar2(){
+    double x;
+	gotoxy(6,10);printf("Digite o valor de X: ");
+	gotoxy(6,11);scanf("%lf", &x);
+	return x;
 }
 
 double calcF1(te_expr *f, double x){
@@ -230,37 +428,46 @@ double realNdf2_2(double e, int iMax, te_expr *f, double x[], int N){
 }
 
 int jacobiano(double N, int eqN, te_expr *fv[], double x[], double m[][varsN]){
-    double r;
-    int i, j;
+    double r,e;
+    int i, j,iMax;
+    limpa();
+    e=pegaE();
+    iMax=pegaiMax();
     for(i = 0; i < eqN; i++){
         te_expr *f = fv[i];
         for(j = 0; j < N; j++){
-            m[i][j] = realNdf1(0.01,10,f,x,j,N);
+            m[i][j] = realNdf1(e,iMax,f,x,j,N);
         }
     }
 }
 
 int hessiana(double N, te_expr *f, double x[], double m[][varsN]){
-    double r;
-    int i, j;
+    double r,e;
+    int i, j,iMax;
+    limpa();
+    e=pegaE();
+    iMax=pegaiMax();
     for(i = 0; i < N; i++){
         for(j = 0; j < N; j++){
             if(i == j){
-                m[i][j] = realNdf2_1(0.01,10,f,x,i,N);
+                m[i][j] = realNdf2_1(e,iMax,f,x,i,N);
             }else{
-                m[i][j] = realNdf2_2(0.01,10,f,x,N);
+                m[i][j] = realNdf2_2(e,iMax,f,x,N);
             }
         }
     }
 }
 
 void printM(double m[][varsN], int col, int lin){
-    int i, j;
+    int i, j, l=5,c=6;
     for(i = 0; i < lin; i++){
-        printf("\n");
+       // printf("\n");
         for(j = 0; j < col; j++){
-            printf(" %.8f ",m[i][j]);
+            gotoxy(c,l);printf(" %.8f ",m[i][j]);
+            c+=12;
         }
+        c=6;
+        l++;
     }
 }
 
@@ -272,28 +479,30 @@ int newton(double e, int iMax, te_expr *f, double x, int *k, double *r){
     *k = -1;
     xi = x;
     fx = calcF1(f,xi);
-    printf("---//---//---");
     while(!flag && *k <= iMax){
         *k+=1;
-        printf("\n[Interacao K = %d]",*k);
+        limpa();
+        gotoxy(6,4);printf("[Interacao K = %d]",*k);
         dfx = realdf1(e,iMax,f,xi);
         xant = xi;
         xi = xi - (fx/dfx);
-        printf("\n[x = \t%.8f]",xi);
+        gotoxy(6,5);printf("[x = \t%.8f]",xi);
         fx = calcF1(f,xi);
         if(fabs(fx)<e) flag = 1;
-        printf("\n[|f(%.8f)| = \t|%.8f|]",xi,fx);
+        gotoxy(6,6);printf("[|f(%.8f)| = \t|%.8f|]",xi,fx);
         err = fabs(xi - xant)/maxErr(xi);
-        printf("\n[Erro = \t|%.8f|]",err);
+        gotoxy(6,7);printf("[Erro = \t|%.8f|]",err);
         if(err < e) flag = 1;
-        
-        printf("\n");
+        gotoxy(6,9);system("pause");
     }
     *r = xi;
+    if(*k > iMax){
+    	limpa();
+        gotoxy(6,4);printf("O n%cmero m%cximo de intera%c%ces foi alcan%cado.",163,160,135,148,135);
+        return 1;
+    }
     return 0;
 }
-
-
 
 int newtonModificado(double e, int iMax, te_expr *f, double x, int *k, double *r){
     int flag = 0;
@@ -304,45 +513,49 @@ int newtonModificado(double e, int iMax, te_expr *f, double x, int *k, double *r
     xi = x;
     fx = calcF1(f,xi);
     dfx = realdf1(e,iMax,f,xi); //dfx fixo
-    printf("---//---//---");
     while(!flag && *k <= iMax){
         *k+=1;
-        printf("\n[Interacao K = %d]",*k);
+        limpa();
+        gotoxy(6,4);printf("[Interacao K = %d]",*k);
        // dfx = realdf1(e,iMax,f,xi); // n precisa disso pq será sempre a msm dfx
         xant = xi;
         xi = xi - (fx/dfx);
-        printf("\n[x = \t%.8f]",xi);
+        gotoxy(6,5);printf("[x = \t%.8f]",xi);
         fx = calcF1(f,xi);
         if(fabs(fx)<e) flag = 1;
-        printf("\n[|f(%.8f)| = \t|%.8f|]",xi,fx);
+        gotoxy(6,6);printf("[|f(%.8f)| = \t|%.8f|]",xi,fx);
         err = fabs(xi - xant)/maxErr(xi);
-        printf("\n[Erro = \t|%.8f|]",err);
+        gotoxy(6,7);printf("[Erro = \t|%.8f|]",err);
         if(err < e) flag = 1;
-        
-        printf("\n");
+    	gotoxy(6,9);system("pause");
     }
     *r = xi;
+    if(*k > iMax){
+    	limpa();
+        gotoxy(6,4);printf("O n%cmero m%cximo de intera%c%ces foi alcan%cado.",163,160,135,148,135);
+        return 1;
+    }
     return 0;
 }
-
 
 int bissecao(double e, int iMax, te_expr *f, double a, double b, int *k, double *r){
     double x;
     double fx;
     int flag = 0;
     if(!bolzano(f,a,b)){
-        printf("\nO intervalo não converge...\n");
+        gotoxy(6,4);printf("O intervalo n%co converge...",198);
         return 1;
     }
-    printf("---//---//---");
+    //printf("---//---//---");
     while(!flag && *k <= iMax){
         *k += 1;
-        printf("\n[Interacao K = %d]",*k);
-        printf("\n[Intervalo = [%.8f %.8f] ]",a,b);
+        limpa();
+        gotoxy(6,4);printf("[Iteracao K = %d]",*k);
+        gotoxy(6,5);printf("[Intervalo = [%.8f %.8f] ]",a,b);
         x = (a+b)/2;
-        printf("\n[x = \t%.8f]",x);
+        gotoxy(6,6);printf("[x = \t%.8f]",x);
         fx = calcF1(f,x);
-        printf("\n[|f(x)| = \t|%.8f|]",fx);
+        gotoxy(6,7);printf("[|f(x)| = \t|%.8f|]",fx);
         if(fabs(fx) < e) flag = 1;
         if(bolzano(f,a,x)){
             b = x; // se fa*fx < 0
@@ -350,13 +563,14 @@ int bissecao(double e, int iMax, te_expr *f, double a, double b, int *k, double 
             a = x; // se fa*fx > 0
         }
         if(fabs(b - a) < e) flag = 1;
-        printf("\n");
+        gotoxy(6,9);system("pause");
     }
 
     *r = x;
 
     if(*k > iMax){
-        printf("\nO número máximo de interações foi alcançado.\n");
+    	limpa();
+        gotoxy(6,4);printf("O n%cmero m%cximo de intera%c%ces foi alcan%cado.",163,160,135,148,135);
         return 2;
     }
     
@@ -365,22 +579,23 @@ int bissecao(double e, int iMax, te_expr *f, double a, double b, int *k, double 
 }
 
 int posicaofalsa(double e, int iMax, te_expr *f, double a, double b, int *k, double *r){
-    printf("\nPosicao falsa");
+    //printf("\nPosicao falsa");
 	double x;
     double fx;
     int flag = 0;
     if(!bolzano(f,a,b)){
-        printf("\nO intervalo não converge...\n");
+       gotoxy(6,4);printf("O intervalo n%co converge...",198);
         return 1;
     }
     while(!flag && *k <= iMax){
         *k += 1;
-        printf("\nInteracao %d",*k);
-        printf("\nk = %d",*k);
+        limpa();
+        gotoxy(6,4);printf("Interacao %d",*k);
+        gotoxy(6,5);printf("k = %d",*k);
         x = (a*calcF1(f,b) - b*calcF1(f,a))/(calcF1(f,b) - calcF1(f,a)); //criando novo x;
-        printf("\nx = %f",x);
+        gotoxy(6,6);printf("x = %f",x);
         fx = calcF1(f,x);        
-        printf("\n |f(x)| = |%f| ",fx);
+        gotoxy(6,7);printf("|f(x)| = |%f| ",fx);
         if(fabs(fx) < e) flag = 1; //fabs = modulo checar f(x)
 	
         if(bolzano(f,a,x)){
@@ -388,13 +603,15 @@ int posicaofalsa(double e, int iMax, te_expr *f, double a, double b, int *k, dou
         }else{
             a = x; // se fa*fx > 0
         }
-        printf(" |b-a| = |%f|",fabs(b-a));
+        gotoxy(6,8);printf("|b-a| = |%f|",fabs(b-a));
         if(fabs(b - a) < e) flag = 1; //|b-a| checar intervalo   
+        gotoxy(6,10);system("pause");
 	}
     *r = x;
 
     if(*k > iMax){
-        printf("\nO número máximo de interações foi alcançado.\n");
+    	limpa();
+        gotoxy(6,4);printf("O n%cmero m%cximo de intera%c%ces foi alcan%cado.",163,160,135,148,135);
         return 2;
     }
     
@@ -402,9 +619,8 @@ int posicaofalsa(double e, int iMax, te_expr *f, double a, double b, int *k, dou
     
 }
 
-
 int posicaofalsamodificada(double e, int iMax, te_expr *f, double a, double b, int *k, double *r){
-    printf("\nPosicao falsa modificada");
+    //printf("\nPosicao falsa modificada");
 	double x=0;
     double fx;
     double xp;
@@ -412,34 +628,35 @@ int posicaofalsamodificada(double e, int iMax, te_expr *f, double a, double b, i
     int flag2=0;
     int fixo=0; //flag de fixo
     if(!bolzano(f,a,b)){
-        printf("\nO intervalo não converge...\n");
+       gotoxy(6,4);printf("O intervalo n%co converge...",198);
         return 1;
     }
     while(!flag && *k <= iMax){
         *k += 1;
-        printf("\nInteracao %d",*k);
-        printf("\nk = %d",*k);
+        limpa();
+        gotoxy(6,4);printf("Interacao %d",*k);
+        gotoxy(6,5);printf("k = %d",*k);
         if(x) xp = x;
         else xp=a;
         if(flag2)
         {
         	if(!fixo)//fixo = a
         	{
-        		printf("\t f(a) = f(a)/2");
+        		gotoxy(6,6);printf("f(a) = f(a)/2");
         		x = (a*calcF1(f,b) - b*calcF1(f,a)/2)/(calcF1(f,b) - calcF1(f,a)/2); 
 
 			}
         	else{
-        		printf("\t f(b) = f(b)/2");
+        		gotoxy(6,6);printf("f(b) = f(b)/2");
         		x = (a*calcF1(f,b)/2 - b*calcF1(f,a))/(calcF1(f,b)/2 - calcF1(f,a)); 
 			}
 		}
 		else x = (a*calcF1(f,b) - b*calcF1(f,a))/(calcF1(f,b) - calcF1(f,a)); 
         //criando novo x;
         flag2=0;
-        printf("\nx = %f",x);
+        gotoxy(6,7);printf("x = %f",x);
         fx = calcF1(f,x);        
-        printf("\n |f(x)| = |%f| ",fx);
+        gotoxy(6,8);printf("|f(x)| = |%f| ",fx);
         if(fabs(fx) < e) flag = 1; //fabs = modulo checar f(x)
 	
         if(bolzano(f,a,x)){
@@ -449,20 +666,21 @@ int posicaofalsamodificada(double e, int iMax, te_expr *f, double a, double b, i
             a = x; // se fa*fx > 0
             fixo = 1;//fixo = b
         }
-        printf(" |b-a| = |%f|",fabs(b-a));
+        gotoxy(6,9);printf("|b-a| = |%f|",fabs(b-a));
         if(fabs(b - a) < e) flag = 1; //|b-a| checar intervalo
-		printf("\tXp = %f",xp);  
+		gotoxy(6,10);printf("Xp = %f",xp);  
         if(calcF1(f,xp) * calcF1(f,x) > 0 )
         {
         	flag2 = 1;
 		}
-		printf("\t[a b] = [%f   %f]",a,b);
-		 
+		gotoxy(6,11);printf("[a b] = [%f   %f]",a,b);
+		gotoxy(6,13);system("pause"); 
 	}
     *r = x;
 
     if(*k > iMax){
-        printf("\nO número máximo de interações foi alcançado.\n");
+    	limpa();
+        gotoxy(6,4);printf("O n%cmero m%cximo de intera%c%ces foi alcan%cado.",163,160,135,148,135);
         return 2;
     }
     
@@ -470,45 +688,120 @@ int posicaofalsamodificada(double e, int iMax, te_expr *f, double a, double b, i
     
 }
 
-
 void pre_bissecao(){
     char ex[50];
     te_expr *f = verifica_gera_expr(ex);
-    double r;
-    int k;
+    double r,e,a,b;
+    int k,iMax,aux;
     k = 0;
-    bissecao(0.01,10,f,1.5,2.8,&k,&r);
-    printf("\n\n%s\n",ex);
-    printf("\n%.8f",r);
+    e=pegaE();
+    iMax=pegaiMax();
+    limpa();
+    a=pegaA();
+    b=pegaB();
+    limpa();
+    aux=bissecao(e,iMax,f,a,b,&k,&r);
+    if(!aux){
+	    //gotoxy(6,4);printf("%s",ex);
+	    gotoxy(6,11);printf("M%ctodo Bissec%c%co",130,135,198);
+		gotoxy(6,12);printf("Itera%c%ces: %d",135,148,k);
+	    gotoxy(6,13);printf("Raiz aproximada: %.8f",r);
+	}
+    getch();
+}
+
+void pre_posicaofalsa(){
+    char ex[50];
+    te_expr *f = verifica_gera_expr(ex);
+    double r,e,a,b;
+    int k,iMax,aux;
+    k = 0;
+    e=pegaE();
+    iMax=pegaiMax();
+    limpa();
+    a=pegaA();
+    b=pegaB();
+    limpa();
+    aux=posicaofalsa(e,iMax,f,a,b,&k,&r);
+    if(!aux){
+	    //gotoxy(6,4);printf("%s",ex);
+	    gotoxy(6,12);printf("M%ctodo Posi%c%co Falsa",130,135,198);
+		gotoxy(6,13);printf("Itera%c%ces: %d",135,148,k);
+	    gotoxy(6,14);printf("Raiz aproximada: %.8f",r);
+	}
+    getch();
+}
+
+void pre_posicaofalsamodificada(){
+    char ex[50];
+    te_expr *f = verifica_gera_expr(ex);
+    double r,e,a,b;
+    int k,iMax,aux;
+    k = 0;
+    e=pegaE();
+    iMax=pegaiMax();
+    limpa();
+    a=pegaA();
+    b=pegaB();
+    limpa();
+    aux=posicaofalsamodificada(e,iMax,f,a,b,&k,&r);
+    if(!aux){
+	    //gotoxy(6,4);printf("%s",ex);
+	    gotoxy(6,15);printf("M%ctodo Posi%c%co Falsa Modificada",130,135,198);
+		gotoxy(6,16);printf("Itera%c%ces: %d",135,148,k);
+	    gotoxy(6,17);printf("Raiz aproximada: %.8f",r);
+	}
     getch();
 }
 
 void pre_newton(){
     char ex[50];
     te_expr *f = verifica_gera_expr(ex);
-    double r;
-    int k;
-    newton(0.001,10,f,7,&k,&r);
-    printf("\n\nResult = %.8f",r);
+    double r,e,x;
+    int k,iMax,aux;
+     e=pegaE();
+    iMax=pegaiMax();
+    x=pegaX();
+    limpa();
+    aux=newton(e,iMax,f,x,&k,&r);
+	if(!aux){
+	    gotoxy(6,11);printf("M%ctodo Newton",130);
+		gotoxy(6,12);printf("Itera%c%ces: %d",135,148,k);
+	    gotoxy(6,13);printf("Raiz aproximada: %.8f",r);
+	}
     getch();
 }
-
 
 void pre_newtonModificado(){
     char ex[50];
     te_expr *f = verifica_gera_expr(ex);
-    double r;
-    int k;
-    newtonModificado(0.01,10,f,1.5,&k,&r);
-    printf("\n\nResult = %.8f",r);
+    double r,e,x;
+    int k,iMax,aux;
+     e=pegaE();
+    iMax=pegaiMax();
+    x=pegaX();
+    limpa();
+    aux=newtonModificado(e,iMax,f,x,&k,&r);
+    if(!aux){
+	    gotoxy(6,11);printf("M%ctodo Newton Modificado",130);
+		gotoxy(6,12);printf("Itera%c%ces: %d",135,148,k);
+	    gotoxy(6,13);printf("Raiz aproximada: %.8f",r);
+	}
     getch();
 }
 
 void teste_Ndf1(){
     char ex[50];
     te_expr *f = verifica_gera_expr(ex);
-    double x[varsN] = {-1,1};
-    printf("%.8f",realNdf2_1(0.01,10,f,x,2,2));
+    int nvar,iMax;
+    double e;
+    e=pegaE();
+    iMax=pegaiMax();
+    double x;
+    x = leVar2(x);
+    limpa();
+    gotoxy(6,4);printf("Derivada Primeira");
+    gotoxy(6,5);printf("f1 = %.8f",realdf1(e,iMax,f,x));
     getch();
 }
 
@@ -516,33 +809,164 @@ void functionArrayGen(te_expr *f[], int N){
     int i;
     char s[50];
     for(i = 0; i < N; i++){
-        f[i] = verifica_gera_expr(s);
+        f[i] = verifica_gera_expr2(s,i+1);
     }
 }
 
 void pre_jacob(){
     char ex[50];
     te_expr *f[MAX];
-    functionArrayGen(f,3); // 3 é o número de eqs
-    double x[varsN] = {1,5};
+    int neq,nvar;
+    limpa();
+    neq=numEq();
+    nvar=numVar();
+    functionArrayGen(f,neq); // 3 é o número de eqs
+    double x[varsN];
+    leVar(x,nvar); 
     double m[MAX][varsN];
-    jacobiano(2,3,f,x,m); // 2 é o tamanho do vetor x
-    printM(m,2,3);
+    jacobiano(nvar,neq,f,x,m); // 2 é o tamanho do vetor x
+    limpa();
+    gotoxy(6,4);printf("Matriz Jacobiana");
+    printM(m,nvar,neq);
     getch();
 }
 
 void pre_hessiana(){
     char ex[50];
     te_expr *f = verifica_gera_expr(ex);
-    double x[varsN] = {-1,1};
+    int nvar;
+    limpa();
+    nvar=numVar();
+    double x[varsN];
+    leVar(x,nvar);
     double m[MAX][varsN];
-    hessiana(2,f,x,m); // 2 aqui é tamanho do vetor x
-    printM(m,2,2);
+    hessiana(nvar,f,x,m); // 2 aqui é tamanho do vetor x
+    limpa();
+    gotoxy(6,4);printf("Matriz Hessiana");
+    printM(m,nvar,nvar);
     getch();
 }
-
-
+//-------------------------------------------------------------------------------------------------------------------------------------
 int main(){
-	pre_newtonModificado();
-
+	//pre_newtonModificado();
+	char resp;
+	int opcao;
+	system("cls");
+	system("color 5F");
+	quadro();
+	opcao = escolher();
+	switch(opcao){
+		case 1:  do{
+					limpa();
+					pre_bissecao();
+					do{
+						limpa();
+						gotoxy(13,10);printf("Deseja realizar uma nova opera%c%co? (S/N)", 135, 198);
+						scanf("%s", &resp);
+						resp=tolower(resp);
+					}while(resp!='s' && resp!='n');
+					
+				}while(resp=='s');
+				main();
+				break;
+		
+		case 2: do{
+					limpa();
+					pre_posicaofalsa();
+					do{
+						limpa();
+						gotoxy(13,10);printf("Deseja realizar uma nova opera%c%co? (S/N)", 135, 198);
+						scanf("%s", &resp);
+						resp=tolower(resp);
+					}while(resp!='s' && resp!='n');
+					
+				}while(resp=='s');
+				main();
+				break;
+		case 3: do{
+					limpa();
+					pre_posicaofalsamodificada();
+					do{
+						limpa();
+						gotoxy(13,10);printf("Deseja realizar uma nova opera%c%co? (S/N)", 135, 198);
+						scanf("%s", &resp);
+						resp=tolower(resp);
+					}while(resp!='s' && resp!='n');
+					
+				}while(resp=='s');
+				main();
+				break;
+		case 4:  do{
+					limpa();
+					pre_newton();
+					do{
+						limpa();
+						gotoxy(13,10);printf("Deseja realizar uma nova opera%c%co? (S/N)", 135, 198);
+						scanf("%s", &resp);
+						resp=tolower(resp);
+					}while(resp!='s' && resp!='n');
+					
+				}while(resp=='s');
+				main();
+				break;
+		case 5:  do{
+					limpa();
+					pre_newtonModificado();
+					do{
+						limpa();
+						gotoxy(13,10);printf("Deseja realizar uma nova opera%c%co? (S/N)", 135, 198);
+						scanf("%s", &resp);
+						resp=tolower(resp);
+					}while(resp!='s' && resp!='n');
+					
+				}while(resp=='s');
+				main();
+				break;
+		case 6: do{
+					limpa();
+					teste_Ndf1();
+					do{
+						limpa();
+						gotoxy(13,10);printf("Deseja realizar uma nova opera%c%co? (S/N)", 135, 198);
+						scanf("%s", &resp);
+						resp=tolower(resp);
+					}while(resp!='s' && resp!='n');
+					
+				}while(resp=='s');
+				main();break;
+		case 7:  do{
+					limpa();
+					pre_jacob();
+					do{
+						limpa();
+						gotoxy(13,10);printf("Deseja realizar uma nova opera%c%co? (S/N)", 135, 198);
+						scanf("%s", &resp);
+						resp=tolower(resp);
+					}while(resp!='s' && resp!='n');
+					
+				}while(resp=='s');
+				main();
+				break;
+		case 8:  do{
+					limpa();
+					pre_hessiana();
+					do{
+						limpa();
+						gotoxy(13,10);printf("Deseja realizar uma nova opera%c%co? (S/N)", 135, 198);
+						scanf("%s", &resp);
+						resp=tolower(resp);
+					}while(resp!='s' && resp!='n');
+					
+				}while(resp=='s');
+				main();
+				break;
+		case 9: sobre();
+				main();
+				break;
+		case 10: system("cls");
+				system("color A0");
+				quadro();
+				gotoxy(18,9);printf("Obrigado por utilizar nosso sistema!\n\n\n\n\n\n\n\n");
+				break;
+	}
 }
