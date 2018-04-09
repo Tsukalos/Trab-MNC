@@ -2,4 +2,4 @@
 
 [img1]: docs/img1.png
 
-[!Img1][img1]
+![Img1][img1]
